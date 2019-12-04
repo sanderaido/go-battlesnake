@@ -4,16 +4,15 @@ import (
 	"net/http"
 )
 
-func Index(res http.ResponseWriter, req *http.Request) {
-	res.WriteHeader(http.StatusOK)
-	res.Write([]byte("This is a Battlesnake participant server"))
+func Index(response http.ResponseWriter, request *http.Request) {
+	response.WriteHeader(http.StatusOK)
+	response.Write([]byte("This is a Battlesnake participant server"))
 }
 
-func Ping(res http.ResponseWriter, req *http.Request) {
-	if req.Method == "POST" {
-		res.WriteHeader(http.StatusOK)
+func Ping(response http.ResponseWriter, request *http.Request) {
+	if request.Method == "POST" {
+		response.WriteHeader(http.StatusOK)
 	} else {
-		res.WriteHeader(http.StatusMethodNotAllowed)
+		response.WriteHeader(http.StatusMethodNotAllowed)
 	}
-
 }
