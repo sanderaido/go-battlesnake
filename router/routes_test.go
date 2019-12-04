@@ -1,9 +1,10 @@
-package router
+package router_test
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"github.com/sanderaido/go-battlesnake/router"
 )
 
 func TestIndex(t *testing.T) {
@@ -11,7 +12,7 @@ func TestIndex(t *testing.T) {
 		request, _ := http.NewRequest(http.MethodGet, "/", nil)
 		response := httptest.NewRecorder()
 
-		Index(response, request)
+		router.Index(response, request)
 
 		got := response.Body.String()
 		want := "This is a Battlesnake server"
