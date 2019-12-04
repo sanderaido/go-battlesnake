@@ -3,10 +3,11 @@ package main
 import (
 	"log"
 	"net/http"
+	"github.com/sanderaido/go-battlesnake/router"
 )
 
 func main() {
-	http.HandleFunc("/", Index)
+	http.HandleFunc("/", router.Index)
 
 	port := "8080"
 
