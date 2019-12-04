@@ -25,8 +25,8 @@ func TestIndex(t *testing.T) {
 
 func TestPing(t *testing.T) {
 
-	// NOTE: it's not requested in the Battlesnake API that only POST should be allowed here,
-	// that's just the request type that the server makes but I wanted to deny other
+	// NOTE: it's not required in the Battlesnake API that only POST should be allowed here,
+	// that's just the request type that the server makes. I just wanted to deny other
 	// methods and write a test for it anyway
 
 	var pingTests = []struct {
