@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/sanderaido/go-battlesnake/game"
+	"log"
 	"net/http"
 )
 
@@ -12,7 +13,10 @@ func RespondJSON(response http.ResponseWriter, data interface{})  {
 	response.WriteHeader(http.StatusOK)
 	jsonData, err := json.Marshal(data)
 	if err == nil {
-		response.Write(jsonData)
+		_, writeError := response.Write(jsonData)
+		if writeError != nil {
+			log.Printf("Error writing the response: %v", err)
+		}
 	}
 }
 
