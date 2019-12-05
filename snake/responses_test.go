@@ -18,11 +18,11 @@ func TestIndexResponse(t *testing.T) {
 
 	snake.HandleIndexRequest(response, request)
 
-	got := response.Body.String()
-	want := "This is a Battlesnake participant server"
+	actual := response.Body.String()
+	expected := "This is a Battlesnake participant server"
 
-	if got != want {
-		t.Errorf("wanted %q, got %q", want, got)
+	if actual != expected {
+		t.Errorf("expected %q, actual %q", expected, actual)
 	}
 }
 
@@ -50,11 +50,11 @@ func TestPingResponse(t *testing.T) {
 
 			snake.HandlePingRequest(response, request)
 
-			got := response.Code
-			want := pingTest.status
+			actual := response.Code
+			expected := pingTest.status
 
-			if got != want {
-				t.Errorf("wanted status %d for %q, got %d", want, pingTest.method, got)
+			if actual != expected {
+				t.Errorf("expected status %d for %q, got %d", expected, pingTest.method, actual)
 			}
 		})
 	}
@@ -157,10 +157,10 @@ func TestEndResponse(t *testing.T) {
 
 	snake.HandleEndRequest(response, request)
 
-	got := response.Code
-	want := http.StatusOK
+	actual := response.Code
+	expected := http.StatusOK
 
-	if got != want {
-		t.Errorf("wanted status %d for EndRequest response, got %d", want, got)
+	if actual != expected {
+		t.Errorf("expected status %d for EndRequest response, got %d", expected, actual)
 	}
 }
