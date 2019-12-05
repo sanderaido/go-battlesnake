@@ -2,6 +2,7 @@ package snake
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/sanderaido/go-battlesnake/game"
 	"github.com/sanderaido/go-battlesnake/util"
 	"log"
@@ -22,23 +23,21 @@ func PingResponse(response http.ResponseWriter, request *http.Request) {
 }
 
 func StartResponse(response http.ResponseWriter, request *http.Request) {
-	decoded := game.MoveRequest{}
-	err := json.NewDecoder(request.Body).Decode(&decoded)
+	_, err := decodeStartRequest(request)
 	if err != nil {
 		log.Printf("Bad start request: %v", err)
 		return
 	}
 
 	util.RespondJSON(response, game.StartResponse{
-		Color: "#ff00ff",
+		Color:    "#ff00ff",
 		HeadType: "bendr",
 		TailType: "pixel",
 	})
 }
 
 func MoveResponse(response http.ResponseWriter, request *http.Request) {
-	decoded := game.MoveRequest{}
-	err := json.NewDecoder(request.Body).Decode(&decoded)
+	_, err := decodeStartRequest(request)
 	if err != nil {
 		log.Printf("Bad move request: %v", err)
 		return
@@ -51,4 +50,13 @@ func MoveResponse(response http.ResponseWriter, request *http.Request) {
 
 func EndResponse(response http.ResponseWriter, _ *http.Request) {
 	response.WriteHeader(http.StatusOK)
+}
+
+func decodeStartRequest(request *http.Request) (game.MoveRequest, error) {
+	decoded := game.MoveRequest{}
+	err := json.NewDecoder(request.Body).Decode(&decoded)
+	if err != nil {
+		return game.MoveRequest{}, errors.New("couldn't decode request")
+	}
+	return decoded, nil
 }
