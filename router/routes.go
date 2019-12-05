@@ -48,3 +48,7 @@ func Move(response http.ResponseWriter, request *http.Request) {
 		Move: "left",
 	})
 }
+
+func End(response http.ResponseWriter, _ *http.Request) {
+	response.WriteHeader(http.StatusOK)
+}

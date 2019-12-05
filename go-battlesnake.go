@@ -11,6 +11,7 @@ func main() {
 	http.HandleFunc("/ping", router.Ping)
 	http.HandleFunc("/start", router.Start)
 	http.HandleFunc("/move", router.Move)
+	http.HandleFunc("/end", router.End)
 
 	port := "8080"
 
