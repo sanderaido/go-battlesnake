@@ -1,9 +1,14 @@
 package snake_test
 
 import (
+	"bytes"
+	"encoding/json"
+	"github.com/sanderaido/go-battlesnake/game"
 	"github.com/sanderaido/go-battlesnake/snake"
+	"github.com/sanderaido/go-battlesnake/util"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -53,6 +58,117 @@ func TestPingResponse(t *testing.T) {
 			if got != want {
 				t.Errorf("wanted status %d for %q, got %d", want, pingTest.method, got)
 			}
+		}
+	})
+}
+
+var mockPostRequestBody = []byte(`{
+  "game": {
+    "id": "game-id-string"
+  },
+  "turn": 4,
+  "board": {
+    "height": 15,
+    "width": 15,
+    "food": [
+      {
+        "x": 1,
+        "y": 3
+      }
+    ],
+    "snakes": [
+      {
+        "id": "snake-id-string",
+        "name": "Sneky Snek",
+        "health": 90,
+        "body": [
+          {
+            "x": 1,
+            "y": 3
+          }
+        ]
+      }
+    ]
+  },
+  "you": {
+    "id": "snake-id-string",
+    "name": "Sneky Snek",
+    "health": 90,
+    "body": [
+      {
+        "x": 1,
+        "y": 3
+      }
+    ]
+  }
+}`)
+
+func TestStartResponse(t *testing.T) {
+	t.Run("returns valid start response for move request", func(t *testing.T) {
+		validRequest, _ := http.NewRequest(http.MethodPost, "/start", bytes.NewBuffer(mockPostRequestBody))
+		response := httptest.NewRecorder()
+		snake.StartResponse(response, validRequest)
+
+		decodedResponse := game.StartResponse{}
+		err := json.NewDecoder(response.Body).Decode(&decodedResponse)
+		if err != nil {
+			t.Errorf("bad start request: %v", err)
+		}
+
+		color := decodedResponse.Color
+		if !strings.HasPrefix(color, "#") || len(color) != 7 {
+			t.Errorf("Invalid Color property in StartResponse: %q", color)
+		}
+
+		allowedHeadTypes := []string{"beluga", "bendr", "dead", "evil", "fang", "pixel", "regular", "safe", "sand-worm", "shades", "silly", "smile", "tongue"}
+		if !util.ContainsString(allowedHeadTypes, decodedResponse.HeadType) {
+			t.Errorf("Missing or invalid HeadType property in StartResponse: %q", decodedResponse.HeadType)
+		}
+
+		allowedTailTypes := []string{"block-bum", "bolt", "curled", "fat-rattle", "freckled", "hook", "pixel", "regular", "round-bum", "sharp", "skinny", "small-rattle"}
+		if !util.ContainsString(allowedTailTypes, decodedResponse.TailType) {
+			t.Errorf("Missing or invalid TailType property in StartResponse: %q", decodedResponse.TailType)
+		}
+	})
+}
+
+func TestMoveResponse(t *testing.T) {
+	t.Run("returns valid start response for move request", func(t *testing.T) {
+		validRequest, _ := http.NewRequest(http.MethodPost, "/move", bytes.NewBuffer(mockPostRequestBody))
+		response := httptest.NewRecorder()
+		snake.MoveResponse(response, validRequest)
+		decodedResponse := game.MoveResponse{}
+
+		err := json.NewDecoder(response.Body).Decode(&decodedResponse)
+		if err != nil {
+			t.Errorf("bad move request: %v", err)
+		}
+
+		switch decodedResponse {
+		case
+			game.MoveResponse{Move:"left"},
+			game.MoveResponse{Move:"right"},
+			game.MoveResponse{Move:"up"},
+			game.MoveResponse{Move:"down"}:
+			return
+		default:
+			t.Errorf("got an invalid MoveResponse: %q", decodedResponse)
+		}
+	})
+}
+
+func TestEndResponse(t *testing.T) {
+	t.Run("returns basic welcome message", func(t *testing.T) {
+		request, _ := http.NewRequest(http.MethodPost, "/end", nil)
+		response := httptest.NewRecorder()
+
+		snake.EndResponse(response, request)
+
+		got := response.Code
+		want := http.StatusOK
+
+		if got != want {
+			t.Errorf("wanted status %d for EndRequest, got %d", want, got)
 		}
 	})
 }
