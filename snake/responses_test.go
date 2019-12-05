@@ -1,18 +1,18 @@
-package router_test
+package snake_test
 
 import (
+	"github.com/sanderaido/go-battlesnake/snake"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"github.com/sanderaido/go-battlesnake/router"
 )
 
-func TestIndex(t *testing.T) {
+func TestIndexResponse(t *testing.T) {
 	t.Run("returns basic welcome message", func(t *testing.T) {
 		request, _ := http.NewRequest(http.MethodGet, "/", nil)
 		response := httptest.NewRecorder()
 
-		router.Index(response, request)
+		snake.IndexResponse(response, request)
 
 		got := response.Body.String()
 		want := "This is a Battlesnake participant server"
@@ -23,7 +23,7 @@ func TestIndex(t *testing.T) {
 	})
 }
 
-func TestPing(t *testing.T) {
+func TestPingResponse(t *testing.T) {
 
 	// NOTE: it's not required in the Battlesnake API that only POST should be allowed here,
 	// that's just the request type that the server makes. I just wanted to deny other
@@ -45,7 +45,7 @@ func TestPing(t *testing.T) {
 			validRequest, _ := http.NewRequest(pingTest.method, "/ping", nil)
 			response := httptest.NewRecorder()
 
-			router.Ping(response, validRequest)
+			snake.PingResponse(response, validRequest)
 
 			got := response.Code
 			want := pingTest.status

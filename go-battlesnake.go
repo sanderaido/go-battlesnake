@@ -1,17 +1,17 @@
 package main
 
 import (
+	"github.com/sanderaido/go-battlesnake/snake"
 	"log"
 	"net/http"
-	"github.com/sanderaido/go-battlesnake/router"
 )
 
 func main() {
-	http.HandleFunc("/", router.Index)
-	http.HandleFunc("/ping", router.Ping)
-	http.HandleFunc("/start", router.Start)
-	http.HandleFunc("/move", router.Move)
-	http.HandleFunc("/end", router.End)
+	http.HandleFunc("/", snake.IndexResponse)
+	http.HandleFunc("/ping", snake.PingResponse)
+	http.HandleFunc("/start", snake.StartResponse)
+	http.HandleFunc("/move", snake.MoveResponse)
+	http.HandleFunc("/end", snake.EndResponse)
 
 	port := "8080"
 

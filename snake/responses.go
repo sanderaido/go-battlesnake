@@ -1,4 +1,4 @@
-package router
+package snake
 
 import (
 	"encoding/json"
@@ -8,12 +8,12 @@ import (
 	"net/http"
 )
 
-func Index(response http.ResponseWriter, request *http.Request) {
+func IndexResponse(response http.ResponseWriter, request *http.Request) {
 	response.WriteHeader(http.StatusOK)
 	response.Write([]byte("This is a Battlesnake participant server"))
 }
 
-func Ping(response http.ResponseWriter, request *http.Request) {
+func PingResponse(response http.ResponseWriter, request *http.Request) {
 	if request.Method == "POST" {
 		response.WriteHeader(http.StatusOK)
 	} else {
@@ -21,7 +21,7 @@ func Ping(response http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func Start(response http.ResponseWriter, request *http.Request) {
+func StartResponse(response http.ResponseWriter, request *http.Request) {
 	decoded := game.MoveRequest{}
 	err := json.NewDecoder(request.Body).Decode(&decoded)
 	if err != nil {
@@ -36,7 +36,7 @@ func Start(response http.ResponseWriter, request *http.Request) {
 	})
 }
 
-func Move(response http.ResponseWriter, request *http.Request) {
+func MoveResponse(response http.ResponseWriter, request *http.Request) {
 	decoded := game.MoveRequest{}
 	err := json.NewDecoder(request.Body).Decode(&decoded)
 	if err != nil {
@@ -49,6 +49,6 @@ func Move(response http.ResponseWriter, request *http.Request) {
 	})
 }
 
-func End(response http.ResponseWriter, _ *http.Request) {
+func EndResponse(response http.ResponseWriter, _ *http.Request) {
 	response.WriteHeader(http.StatusOK)
 }
