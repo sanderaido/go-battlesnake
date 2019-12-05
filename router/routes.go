@@ -35,3 +35,16 @@ func Start(response http.ResponseWriter, request *http.Request) {
 		TailType: "pixel",
 	})
 }
+
+func Move(response http.ResponseWriter, request *http.Request) {
+	decoded := game.MoveRequest{}
+	err := json.NewDecoder(request.Body).Decode(&decoded)
+	if err != nil {
+		log.Printf("Bad move request: %v", err)
+		return
+	}
+
+	util.RespondJSON(response, game.MoveResponse{
+		Move: "left",
+	})
+}
