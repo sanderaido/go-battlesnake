@@ -2,6 +2,8 @@ package util
 
 import (
 	"encoding/json"
+	"errors"
+	"github.com/sanderaido/go-battlesnake/game"
 	"net/http"
 )
 
@@ -21,4 +23,13 @@ func ContainsString(a []string, x string) bool {
 		}
 	}
 	return false
+}
+
+func DecodeMoveRequest(request *http.Request) (game.MoveRequest, error) {
+	decoded := game.MoveRequest{}
+	err := json.NewDecoder(request.Body).Decode(&decoded)
+	if err != nil {
+		return game.MoveRequest{}, errors.New("couldn't decode request")
+	}
+	return decoded, nil
 }
