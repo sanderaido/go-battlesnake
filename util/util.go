@@ -20,9 +20,9 @@ func RespondJSON(response http.ResponseWriter, data interface{})  {
 	}
 }
 
-func ContainsString(allStrings []string, stringToFind string) bool {
-	for _, currentString := range allStrings {
-		if currentString == stringToFind {
+func ContainsString(stringArray []string, stringToFind string) bool {
+	for _, iteratedString := range stringArray {
+		if iteratedString == stringToFind {
 			return true
 		}
 	}
