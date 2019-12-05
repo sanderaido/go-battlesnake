@@ -7,12 +7,12 @@ import (
 	"net/http"
 )
 
-func IndexResponse(response http.ResponseWriter, request *http.Request) {
+func HandleIndexRequest(response http.ResponseWriter, request *http.Request) {
 	response.WriteHeader(http.StatusOK)
 	response.Write([]byte("This is a Battlesnake participant server"))
 }
 
-func PingResponse(response http.ResponseWriter, request *http.Request) {
+func HandlePingRequest(response http.ResponseWriter, request *http.Request) {
 	if request.Method == "POST" {
 		response.WriteHeader(http.StatusOK)
 	} else {
@@ -20,7 +20,7 @@ func PingResponse(response http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func StartResponse(response http.ResponseWriter, request *http.Request) {
+func HandleStartRequest(response http.ResponseWriter, request *http.Request) {
 	_, err := util.DecodeMoveRequest(request)
 	if err != nil {
 		log.Printf("Bad start request: %v", err)
@@ -34,7 +34,7 @@ func StartResponse(response http.ResponseWriter, request *http.Request) {
 	})
 }
 
-func MoveResponse(response http.ResponseWriter, request *http.Request) {
+func HandleMoveRequest(response http.ResponseWriter, request *http.Request) {
 	_, err := util.DecodeMoveRequest(request)
 	if err != nil {
 		log.Printf("Bad move request: %v", err)
@@ -46,7 +46,7 @@ func MoveResponse(response http.ResponseWriter, request *http.Request) {
 	})
 }
 
-func EndResponse(response http.ResponseWriter, _ *http.Request) {
+func HandleEndRequest(response http.ResponseWriter, _ *http.Request) {
 	response.WriteHeader(http.StatusOK)
 }
 

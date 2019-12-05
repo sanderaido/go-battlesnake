@@ -7,11 +7,11 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/", snake.IndexResponse)
-	http.HandleFunc("/ping", snake.PingResponse)
-	http.HandleFunc("/start", snake.StartResponse)
-	http.HandleFunc("/move", snake.MoveResponse)
-	http.HandleFunc("/end", snake.EndResponse)
+	http.HandleFunc("/", snake.HandleIndexRequest)
+	http.HandleFunc("/ping", snake.HandlePingRequest)
+	http.HandleFunc("/start", snake.HandleStartRequest)
+	http.HandleFunc("/move", snake.HandleMoveRequest)
+	http.HandleFunc("/end", snake.HandleEndRequest)
 
 	port := "8080"
 

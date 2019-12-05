@@ -26,10 +26,10 @@ func ContainsString(a []string, x string) bool {
 }
 
 func DecodeMoveRequest(request *http.Request) (game.MoveRequest, error) {
-	decoded := game.MoveRequest{}
-	err := json.NewDecoder(request.Body).Decode(&decoded)
+	decodedRequest := game.MoveRequest{}
+	err := json.NewDecoder(request.Body).Decode(&decodedRequest)
 	if err != nil {
 		return game.MoveRequest{}, errors.New("couldn't decode request")
 	}
-	return decoded, nil
+	return decodedRequest, nil
 }
