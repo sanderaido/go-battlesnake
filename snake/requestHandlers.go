@@ -9,7 +9,10 @@ import (
 
 func HandleIndexRequest(response http.ResponseWriter, request *http.Request) {
 	response.WriteHeader(http.StatusOK)
-	response.Write([]byte("This is a Battlesnake participant server"))
+	_, writeError := response.Write([]byte("This is a Battlesnake participant server"))
+	if writeError != nil {
+		log.Printf("Error writing the response: %v", err)
+	}
 }
 
 func HandlePingRequest(response http.ResponseWriter, request *http.Request) {
