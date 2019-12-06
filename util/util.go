@@ -15,7 +15,7 @@ func RespondJSON(response http.ResponseWriter, data interface{})  {
 	if err == nil {
 		_, writeError := response.Write(jsonData)
 		if writeError != nil {
-			log.Printf("Error writing the response: %v", err)
+			log.Printf("Error writing the response: %v", writeError)
 		}
 	}
 }

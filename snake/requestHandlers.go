@@ -11,7 +11,7 @@ func HandleIndexRequest(response http.ResponseWriter, request *http.Request) {
 	response.WriteHeader(http.StatusOK)
 	_, writeError := response.Write([]byte("This is a Battlesnake participant server"))
 	if writeError != nil {
-		log.Printf("Error writing the response: %v", err)
+		log.Printf("Error writing the response: %v", writeError)
 	}
 }
 
