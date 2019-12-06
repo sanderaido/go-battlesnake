@@ -26,6 +26,7 @@ func HandlePingRequest(response http.ResponseWriter, request *http.Request) {
 func HandleStartRequest(response http.ResponseWriter, request *http.Request) {
 	_, err := util.DecodeMoveRequest(request)
 	if err != nil {
+		response.WriteHeader(http.StatusBadRequest)
 		log.Printf("Bad start request: %v", err)
 		return
 	}
@@ -40,6 +41,7 @@ func HandleStartRequest(response http.ResponseWriter, request *http.Request) {
 func HandleMoveRequest(response http.ResponseWriter, request *http.Request) {
 	_, err := util.DecodeMoveRequest(request)
 	if err != nil {
+		response.WriteHeader(http.StatusBadRequest)
 		log.Printf("Bad move request: %v", err)
 		return
 	}

@@ -60,7 +60,7 @@ func TestPingResponse(t *testing.T) {
 	}
 }
 
-var mockPostRequestBody = []byte(`{
+var validPostRequestBody = []byte(`{
   "game": {
     "id": "game-id-string"
   },
@@ -102,53 +102,85 @@ var mockPostRequestBody = []byte(`{
 }`)
 
 func TestHandleStartRequest(t *testing.T) {
-	validRequest, _ := http.NewRequest(http.MethodPost, "/start", bytes.NewBuffer(mockPostRequestBody))
-	response := httptest.NewRecorder()
-	snake.HandleStartRequest(response, validRequest)
+	t.Run("responds with valid StartResponse when Start request body is valid", func(t *testing.T) {
+		validRequest, _ := http.NewRequest(http.MethodPost, "/start", bytes.NewBuffer(validPostRequestBody))
+		response := httptest.NewRecorder()
+		snake.HandleStartRequest(response, validRequest)
 
-	decodedResponse := game.StartResponse{}
-	err := json.NewDecoder(response.Body).Decode(&decodedResponse)
-	if err != nil {
-		t.Errorf("bad start request: %v", err)
-	}
+		decodedResponse := game.StartResponse{}
+		err := json.NewDecoder(response.Body).Decode(&decodedResponse)
+		if err != nil {
+			t.Errorf("bad start request: %v", err)
+		}
 
-	color := decodedResponse.Color
-	if !strings.HasPrefix(color, "#") || len(color) != 7 {
-		t.Errorf("Invalid Color property in start response: %q", color)
-	}
+		color := decodedResponse.Color
+		if !strings.HasPrefix(color, "#") || len(color) != 7 {
+			t.Errorf("Invalid Color property in start response: %q", color)
+		}
 
-	allowedHeadTypes := []string{"beluga", "bendr", "dead", "evil", "fang", "pixel", "regular", "safe", "sand-worm", "shades", "silly", "smile", "tongue"}
-	if !util.ContainsString(allowedHeadTypes, decodedResponse.HeadType) {
-		t.Errorf("Missing or invalid HeadType property in start response: %q", decodedResponse.HeadType)
-	}
+		allowedHeadTypes := []string{"beluga", "bendr", "dead", "evil", "fang", "pixel", "regular", "safe", "sand-worm", "shades", "silly", "smile", "tongue"}
+		if !util.ContainsString(allowedHeadTypes, decodedResponse.HeadType) {
+			t.Errorf("Missing or invalid HeadType property in start response: %q", decodedResponse.HeadType)
+		}
 
-	allowedTailTypes := []string{"block-bum", "bolt", "curled", "fat-rattle", "freckled", "hook", "pixel", "regular", "round-bum", "sharp", "skinny", "small-rattle"}
-	if !util.ContainsString(allowedTailTypes, decodedResponse.TailType) {
-		t.Errorf("Missing or invalid TailType property in start response: %q", decodedResponse.TailType)
-	}
+		allowedTailTypes := []string{"block-bum", "bolt", "curled", "fat-rattle", "freckled", "hook", "pixel", "regular", "round-bum", "sharp", "skinny", "small-rattle"}
+		if !util.ContainsString(allowedTailTypes, decodedResponse.TailType) {
+			t.Errorf("Missing or invalid TailType property in start response: %q", decodedResponse.TailType)
+		}
+	})
+
+	t.Run("should respond with http status 404 if Start request body is invalid", func(t *testing.T) {
+		invalidRequest, _ := http.NewRequest(http.MethodPost, "/start", bytes.NewBuffer([]byte(`invalidBody`)))
+		response := httptest.NewRecorder()
+		snake.HandleStartRequest(response, invalidRequest)
+
+		actual := response.Code
+		expected := http.StatusBadRequest
+
+		if actual != expected {
+			t.Errorf("expected http status %d , got: %d", expected, actual)
+		}
+	})
+
 }
 
 func TestMoveResponse(t *testing.T) {
-	validRequest, _ := http.NewRequest(http.MethodPost, "/move", bytes.NewBuffer(mockPostRequestBody))
-	response := httptest.NewRecorder()
-	snake.HandleMoveRequest(response, validRequest)
-	decodedResponse := game.MoveResponse{}
+	t.Run("responds with valid MoveResponse when Move request body is valid", func(t *testing.T) {
+		validRequest, _ := http.NewRequest(http.MethodPost, "/move", bytes.NewBuffer(validPostRequestBody))
+		response := httptest.NewRecorder()
+		snake.HandleMoveRequest(response, validRequest)
+		decodedResponse := game.MoveResponse{}
 
-	err := json.NewDecoder(response.Body).Decode(&decodedResponse)
-	if err != nil {
-		t.Errorf("bad move request: %v", err)
-	}
+		err := json.NewDecoder(response.Body).Decode(&decodedResponse)
+		if err != nil {
+			t.Errorf("bad move request: %v", err)
+		}
 
-	switch decodedResponse {
-	case
-		game.MoveResponse{Move:"left"},
-		game.MoveResponse{Move:"right"},
-		game.MoveResponse{Move:"up"},
-		game.MoveResponse{Move:"down"}:
-		return
-	default:
-		t.Errorf("got an invalid move response: %q", decodedResponse)
-	}
+		switch decodedResponse {
+		case
+			game.MoveResponse{Move:"left"},
+			game.MoveResponse{Move:"right"},
+			game.MoveResponse{Move:"up"},
+			game.MoveResponse{Move:"down"}:
+			return
+		default:
+			t.Errorf("got an invalid move response: %q", decodedResponse)
+		}
+	})
+
+
+	t.Run("should respond with http status 404 if Start request body is invalid", func(t *testing.T) {
+		invalidRequest, _ := http.NewRequest(http.MethodPost, "/start", bytes.NewBuffer([]byte(`invalidBody`)))
+		response := httptest.NewRecorder()
+		snake.HandleMoveRequest(response, invalidRequest)
+
+		actual := response.Code
+		expected := http.StatusBadRequest
+
+		if actual != expected {
+			t.Errorf("expected http status %d , got: %d", expected, actual)
+		}
+	})
 }
 
 func TestEndResponse(t *testing.T) {
